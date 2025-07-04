@@ -1,9 +1,7 @@
 package org.example.task.services;
 
-import org.example.task.interfaces.Expirable;
 import org.example.task.interfaces.Shippable;
 import org.example.task.models.Cart;
-import org.example.task.models.CartItem;
 
 public class ShippingService {
 
@@ -25,30 +23,32 @@ public class ShippingService {
 
     public static void ship(Cart cart) {
         System.out.println("** Shipment notice **");
-        double totalWeight = 0.0;
-        for (CartItem item : cart.getProducts()) {
+
+        double totalWeight = calculateTotalWeight(cart);
+
+        printItemWeights(cart);
+
+        System.out.printf("%-18s %8.1fkg%n", "Total package weight", totalWeight);
+        System.out.println();
+    }
+
+    private static double calculateTotalWeight(Cart cart) {
+        return cart.getProducts().stream()
+                .filter(item -> item.getProduct() instanceof Shippable)
+                .mapToDouble(item -> ((Shippable) item.getProduct()).getWeight() * item.getQuantity())
+                .sum();
+    }
+    private static void printItemWeights(Cart cart)
+    {
+        for (var item : cart.getProducts()) {
             // Skip non-shippable products
             if (!(item.getProduct() instanceof Shippable shippable)) {
                 continue;
             }
-
-            // Check if product is expired
-            if (item.getProduct() instanceof Expirable expirable && expirable.isExpired()) {
-                throw new IllegalArgumentException("Cannot ship expired product: " + item.getProduct().getName());
-            }
-
-            // Check inventory levels
-            if (item.getQuantity() > item.getProduct().getQuantity()) {
-                throw new IllegalArgumentException("Insufficient stock for product: " + item.getProduct().getName());
-            }
-
             int qty = item.getQuantity();
             double itemWeightKg = shippable.getWeight() * qty;
             int itemWeightGrams = (int) (itemWeightKg * 1000);
-            System.out.println(qty + "x " + shippable.getName() + " " + itemWeightGrams + "g");
-            totalWeight += itemWeightKg;
-
+            System.out.printf("%-2dx %-17s %8dg%n", qty, shippable.getName(), itemWeightGrams);
         }
-        System.out.println("Total package weight " + String.format("%.1fkg", totalWeight));
     }
 }
