@@ -20,7 +20,7 @@ public class Main {
 
     private static void successTest()
     {
-        Customer customer = new Customer("John Doe", "johndoe@email.com", 100.0);
+        Customer customer = new Customer("John Doe", 100.0);
         Cart cart = new Cart(customer);
         Date expirationDate = new Date(System.currentTimeMillis() + 86400000); // 1 day
         
@@ -36,7 +36,7 @@ public class Main {
     }
     private static void productExpiredFailureTest()
     {
-        Customer customer = new Customer("Jane Doe", "janedoe@emai.com", 50.0);
+        Customer customer = new Customer("Jane Doe", 50.0);
         Cart cart = new Cart(customer);
         Date expirationDate = new Date(System.currentTimeMillis() - 86400000); // 1 day ago
 
@@ -52,7 +52,7 @@ public class Main {
     }
     private static void insufficientBalanceFailureTest()
     {
-        Customer customer = new Customer("Alice", "alice@example.com", 10.0);
+        Customer customer = new Customer("Alice", 10.0);
         Cart cart = new Cart(customer);
         Date expirationDate = new Date(System.currentTimeMillis() + 86400000); // 1 day
         ExpirableShippableProduct cheese = new ExpirableShippableProduct("Cheese", 20.0, 10, expirationDate, 0.5);
@@ -66,7 +66,7 @@ public class Main {
     }
     private static void insufficientStockFailureTest()
     {
-        Customer customer = new Customer("Bob", "bob@email.com", 100.0);
+        Customer customer = new Customer("Bob", 100.0);
         Cart cart = new Cart(customer);
         Date expirationDate = new Date(System.currentTimeMillis() + 86400000); // 1 day
         ExpirableShippableProduct cheese = new ExpirableShippableProduct("Cheese", 20.0, 2, expirationDate, 0.5);
