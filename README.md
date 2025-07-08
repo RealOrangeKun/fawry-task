@@ -52,3 +52,5 @@ Run the main class:
 ```
 java -cp target/classes org.example.task.Main
 ```
+
+![alt text](image.png)
